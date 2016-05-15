@@ -420,6 +420,14 @@ export default Ember.Component.extend({
     return false;
   }.property('session.data.authenticated.user.id'),
 
+  // Check if current user is developer
+  isDev: function() {
+    var access_level = this.get('session').get('data.authenticated.access_level');
+
+    if (access_level >= 30) { return true; }
+    return false;
+  }.property('session.data.authenticated.user.id'),
+
   // show only if current user is same as current form / or admin
   isEnable: function() {
     var access_level = this.get('session').get('data.authenticated.access_level');

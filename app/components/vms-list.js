@@ -10,6 +10,7 @@ export default Ember.Component.extend({
   isShowingIO: false,
   isShowingMonitor: false,
   isShowingDetails: false,
+  isShowingSettings: false,
   isReload: false,
   vmSelected: null,
 
@@ -257,7 +258,6 @@ export default Ember.Component.extend({
 
   // reset to delete flag
   resetDelete: function() {
-    Ember.Logger.debug("okok resetdelete");
     this.get('vms').setEach('todelete', false);
     this.set('isAllDelete', false);
   }.observes('search', 'projectId', 'userId', 'currentPage'),
@@ -280,6 +280,17 @@ export default Ember.Component.extend({
       }
     },
 
+    // open detail modal for targetted vm (vmId parameter)
+    showSettings: function(vm) {
+      this.set('vmSelected', vm);
+      this.set('isShowingSettings', true);
+      this.set('isBusy', true);
+
+      if (!this.get('isReload')) {
+        this.reloadVm();
+      }
+    },
+
     // open rollover modal for targetted vm
     showHover: function(vmId) {
       this.set('isShowingHovers', vmId);
@@ -292,9 +303,14 @@ export default Ember.Component.extend({
 
     // open uris modal from targetted vm (vm parameter)
     showUris: function(vm) {
+      var self = this;
+
       this.set('vmSelected', vm);
-      this.set('isShowingUris', true);
       this.set('isBusy', true);
+
+      Ember.run.later(function(){
+        self.set('isShowingUris', true);
+      }, 500);
     },
 
     // open io modal from targetted vm (vm parameter)
